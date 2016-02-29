@@ -1,7 +1,9 @@
 # dogduck.py
 
-Usage:
+## Usage:
+```
     python dogduck.py [speed of duck / speed of dog]
+```
 
 This is my first attempt at using `pygame` and it turned out to be easier than expected.
 
