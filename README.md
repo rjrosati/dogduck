@@ -1,6 +1,6 @@
 # dogduck.py
 
-## Usage:
+### Usage:
 ```
     python dogduck.py [speed of duck / speed of dog]
 ```
