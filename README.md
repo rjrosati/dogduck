@@ -2,7 +2,7 @@
 
 ### Usage:
 ```
-    python dogduck.py [speed of duck / speed of dog]
+    python dogduck.py [speed of dog / speed of duck]
 ```
 
 This is my first attempt at using `pygame` and it turned out to be easier than expected.
@@ -15,3 +15,5 @@ We did not figure out the solution in time, but weren't too far off.
 The official solution for the duck's motion is currently in `duck_p`, other ideas are commented out.
 
 Setting `GRAPHICS = False` will disable `pygame` visualization, and simply print the result of the simulation.
+
+At the moment this code isn't the most numerically stable, some values of the dog's speed seem to fail the angle check in `duck_p`. In a couple cases I found, a sufficiently small `dt` solved the problem.
