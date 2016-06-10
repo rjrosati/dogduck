@@ -7,12 +7,13 @@ if GRAPHICS:
 
 # pond rad
 R = 400.0
-duck_speed = float(sys.argv[1])*R
-dog_speed = R*np.pi
+duck_speed = np.pi*R
+dog_speed = float(sys.argv[1])*R*np.pi
 dt = 0.001
 maxfps=90
 size = 1000
 touch_dist = 1
+fudge_angle = 0.2
 
 dog_dv = dog_speed*dt
 duck_dv = duck_speed*dt
@@ -97,8 +98,9 @@ def duck_p(dog_pos,duck_pos):
         if np.linalg.norm(duck_pos) < r-0.1:
             return duck_pos+duck_dv*np.array([1,0])
         else:
-            if dog_theta + np.pi - my_theta < 0.1:
-                # we're basically opposite the dog, make a dash for the exit at 90 deg
+            if -fudge_angle < np.pi + my_theta - dog_theta < 0:
+                # we're basically opposite the dog, and fudged a bit to make sure dog can't backtrack
+                # make a dash for the exit at 90 deg
                 run_away=True
                 run_away_vec[0] = -np.sin(my_theta)
                 run_away_vec[1] = np.cos(my_theta)
@@ -110,13 +112,14 @@ def duck_p(dog_pos,duck_pos):
 
 
 def dog_p(dog_pos,duck_pos,dog_theta,dog_dtheta):
-    vec1 = R*np.array([np.cos(dog_theta+dog_dtheta),np.sin(dog_theta+dog_dtheta)])
-    vec2 = R*np.array([np.cos(dog_theta-dog_dtheta),np.sin(dog_theta-dog_dtheta)])
+    dtheta = np.array([0,dog_dtheta,-dog_dtheta])
+
+    vec = [R*np.array([np.cos(dog_theta+dth),np.sin(dog_theta+dth)]) for dth in dtheta]
+    
+
     #pick whichever way is closer to the duck
-    if np.linalg.norm(vec1-duck_pos) <= np.linalg.norm(vec2-duck_pos):
-        return vec1,dog_theta+dog_dtheta
-    else:
-        return vec2,dog_theta-dog_dtheta
+    c = np.argmin([np.linalg.norm(x-duck_pos) for x in vec])
+    return vec[c],dog_theta+dtheta[c]
 
 # these are centered at the origin, for display the origin is shifted to the center of the window
 duck_pos = np.array([0.0,0.0])
